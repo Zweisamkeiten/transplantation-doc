@@ -170,4 +170,16 @@ msh />
 
 ## Usage <a name = "usage"></a>
 
+### 自行添加测试程序
+* 正确设置`AM_HOME`环境变量。
+* 将自己的测试程序源码目录放到`./prog/src`下，源码目录下需要有个Makefile，其内容格式可以参考`./prog/src/hello/Makefile`：
+    ```Makefile
+    SRCS = hello.c # 所有的源码路径
+    NAME = hello   # 生成的可执行程序名
+
+    include $(AM_HOME)/Makefile
+    ```
+* 然后切换到`./prog/src`，修改`run.py`中的`APP_NAME`和`APP_TYPE`的值。其中`APP_NAME`修改为上一个步骤中Makefile中填写的`NAME`，`APP_TYPE`修改为`flash`或者`mem`，表示生成的程序的加载类型，`flash`表示程序从flash直接执行，`mem`表示程序先从flash加载到mem中，然后再执行。
+* 执行`./prog/src/run.py`，编译通过的话就可以在`./prog/bin/$(FLASH_TYPE)`下得到可执行程序。
+
 Add notes about how to use the system.
