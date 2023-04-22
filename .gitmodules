@@ -4,3 +4,6 @@
 [submodule "abstract-machine"]
 	path = abstract-machine
 	url = git@github.com:iEDA-Open-Source-Core-Project/abstract-machine.git
+[submodule "am-kernels"]
+	path = am-kernels
+	url = git@github.com:iEDA-Open-Source-Core-Project/am-kernels.git
