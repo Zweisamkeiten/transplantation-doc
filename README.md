@@ -146,7 +146,8 @@ sudo apt-get install scons g++-riscv64-linux-gnu binutils-riscv64-linux-gnu # �
 #### 构建
 
 ```
-git clone https://github.com/OSCPU/rt-thread.git
+cd $WORKDIR
+git submodule update --init --recursive
 cd rt-thread/bsp/qemu-riscv-virt64/
 scons
 ```
