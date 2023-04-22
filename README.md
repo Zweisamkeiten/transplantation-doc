@@ -23,6 +23,14 @@ date updated: 2023-03-31 20:10
 
 ### Prerequisites
 
+#### 0. 声明工作区
+
+```sh
+git clone https://github.com/Zweisamkeiten/transplantation-doc.git work && cd work
+mkdir output
+export WORKDIR=$(pwd) && echo $WORKDIR
+```
+
 #### 1. 构建 `riscv-gnu-toolchain` 的裸机 `newlib` 交叉编译器
 
 ##### 构建依赖
@@ -37,23 +45,31 @@ $ sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev l
 On Arch Linux, executing the following command should suffice:
 
 ```
-$ sudo pacman -Syyu autoconf automake curl python3 libmpc mpfr gmp gawk base-devel bison flex texinfo gperf libtool patchutils bc zlib expat
+$ sudo pacman -Sy autoconf automake curl python3 libmpc mpfr gmp gawk base-devel bison flex texinfo gperf libtool patchutils bc zlib expat
 ```
 
-##### Getting the source
+##### Getting the source(From official repo)
 
-```
+```sh
 git clone https://github.com/riscv/riscv-gnu-toolchain --depth=1
 ```
+
+##### Getting the source(From mirror)
+
+```sh
+bash riscv-gnu-toolchain.sh
+```
+
+耐心等待所有 repo 拉取完成
 
 ##### 构建 newlib 交叉编译器 (同时支持 32位和64位)
 
 ```
-cd riscv-gnu-toolchain
-./configure --prefix=/opt/riscv --enable-multilib
-sudo make
+cd $WORKDIR/riscv-gnu-toolchain
+./configure --prefix=$WORKDIR/output/riscv --enable-multilib
+make -j$(nproc)
 # 临时生效可执行文件路径, 长期生效请写入 shell 的相关文件中
-export PATH=/opt/riscv/bin:$PATH
+export PATH=$WORKDIR/output/riscv/bin:$PATH
 ```
 
 ##### 检查
@@ -61,6 +77,11 @@ export PATH=/opt/riscv/bin:$PATH
 ```
 $ riscv64-unknown-elf-gcc --version
 riscv64-unknown-elf-gcc () x.x.x
+$ test $(which riscv64-unknown-elf-gcc) == "$WORKDIR/output/riscv/bin/riscv64-unknown-elf-gcc"
+$ echo $?
+0
+$ which riscv64-unknown-elf-gcc
+/path/to/work/output/riscv/bin/riscv64-unknown-elf-gcc
 ```
 
 #### 2. 构建QEMU 7.2.0
@@ -78,14 +99,14 @@ $ sudo apt-get install make ninja-build gcc pkg-config libglib2.0-dev libpixman-
 On Arch Linux, executing the following command should suffice:
 
 ```
-$ sudo pacman -Syyu make ninja gcc pkgconf glib2 pixman libcap-ng-dev attr
+$ sudo pacman -Sy make ninja gcc pkgconf glib2 pixman libcap-ng-dev attr
 ```
 
 ##### Getting the source
 
 ```
-git clone https://github.com/qemu/qemu.git
-cd qemu && git checkout v7.2.0
+cd $WORKDIR/riscv-gnu-toolchain/qemu
+git checkout v7.2.0
 ```
 
 ##### 构建
@@ -93,12 +114,13 @@ cd qemu && git checkout v7.2.0
 ```
 mkdir -p build
 cd build
-../configure --target-list=riscv32-softmmu,riscv64-softmmu --enable-virtfs --disable-gio --enable-debug
-make $(nproc)
-sudo make install
+../configure --prefix=$WORKDIR/output/qemu --target-list=riscv32-softmmu,riscv64-softmmu --enable-virtfs --disable-gio --enable-debug
+make -j$(nproc)
+make install
+export PATH=$WORKDIR/output/qemu/bin:$PATH
 ```
 
-或通过 `--prefix=安装绝对路径` 指定安装的位置, 最终将该路径添加进行 `PATH`  环境变量中
+或通过 `--prefix=安装绝对路径` 指定安装的位置, 最终将该路径添加进行 `PATH` 环境变量中
 
 ##### 检查
 
@@ -106,6 +128,11 @@ sudo make install
 $ qemu-system-riscv32 --version
 QEMU emulator version 7.2.0 (v7.2.0)
 Copyright (c) 2003-2022 Fabrice Bellard and the QEMU Project developers
+$ test $(which qemu-system-riscv32) == "$WORKDIR/output/qemu/bin/qemu-system-riscv32"
+$ echo $?
+0
+$ which qemu-system-riscv32
+/path/to/work/output/qemu/bin/qemu-system-riscv32
 ```
 
 ### 构建 RT-thread
