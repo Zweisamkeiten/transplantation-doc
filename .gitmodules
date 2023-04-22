@@ -1,3 +1,6 @@
 [submodule "rt-thread"]
 	path = rt-thread
 	url = git@github.com:iEDA-Open-Source-Core-Project/rt-thread.git
+[submodule "abstract-machine"]
+	path = abstract-machine
+	url = git@github.com:iEDA-Open-Source-Core-Project/abstract-machine.git
