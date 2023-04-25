@@ -29,6 +29,10 @@ date updated: 2023-03-31 20:10
 git clone https://github.com/Zweisamkeiten/transplantation-doc.git work && cd work
 mkdir output
 export WORKDIR=$(pwd) && echo $WORKDIR
+source init.sh
+git submodule update --init am-kernels
+git submodule update --init abstract-machine
+git submodule update --init rt-thread
 ```
 
 #### 1. 构建 `riscv-gnu-toolchain` 的裸机 `newlib` 交叉编译器
@@ -172,6 +176,9 @@ msh />
 
 ### 自行添加测试程序
 * 正确设置`AM_HOME`环境变量。
+```sh
+source init.sh
+```
 * 将自己的测试程序源码目录放到`./prog/src`下，源码目录下需要有个Makefile，其内容格式可以参考`./prog/src/hello/Makefile`：
     ```Makefile
     SRCS = hello.c # 所有的源码路径
@@ -179,7 +186,7 @@ msh />
 
     include $(AM_HOME)/Makefile
     ```
-* 然后切换到`./prog/src`，修改`run.py`中的`APP_NAME`和`APP_TYPE`的值。其中`APP_NAME`修改为上一个步骤中Makefile中填写的`NAME`，`APP_TYPE`修改为`flash`或者`mem`，表示生成的程序的加载类型，`flash`表示程序从flash直接执行，`mem`表示程序先从flash加载到mem中，然后再执行。
-* 执行`./prog/src/run.py`，编译通过的话就可以在`./prog/bin/$(FLASH_TYPE)`下得到可执行程序。
+* 然后切换到`./prog/src`，修改`run.py`中的`APP_NAME`和`APP_TYPE`, `APP_ARCH`的值。其中`APP_NAME`修改为上一个步骤中Makefile中填写的`NAME`，`APP_TYPE`修改为`flash`或者`mem`，表示生成的程序的加载类型，`flash`表示程序从flash直接执行，`mem`表示程序先从flash加载到mem中， `APP_ARCH`修改为 `riscv64-mycpu` 或 `riscv32-mycpu` 然后再执行。
+* 执行`./prog/src/run.py`，编译通过的话就可以在`./prog/bin/$(FLASH_TYPE)`下得到可执行程序和相对应类型的 image。
 
 Add notes about how to use the system.
