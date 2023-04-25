@@ -46,12 +46,12 @@ def copy_oper(app_type):
         os.system('mv build/' + APP_JUMP_ELF + ' build/' + 'jump-' + APP_STD_ELF)
 
     os.chdir(HOME_DIR + '/' + APP_NAME)
-    os.mkdir(HOME_DIR + '/../bin/' + APP_TYPE + '/' + APP_NAME)
+    os.system('mkdir -p ' + HOME_DIR + '/../bin/' + APP_TYPE + '/' + APP_NAME)
     os.system('cp -r build/*' + ' ' +
               HOME_DIR + '/../bin/' + APP_TYPE + '/' + APP_NAME + '/')
 
     os.chdir(HOME_DIR + '/jump')
-    os.mkdir(HOME_DIR + '/../bin/' + APP_TYPE + '/jump')
+    os.system('mkdir -p ' + HOME_DIR + '/../bin/' + APP_TYPE + '/jump')
     os.system('cp -r build/*' + ' ' +
               HOME_DIR + '/../bin/' + APP_TYPE + '/jump/')
 
