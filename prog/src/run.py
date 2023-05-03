@@ -13,6 +13,9 @@ APP_STD_BIN = APP_NAME + '-' + APP_TYPE + '.bin'
 APP_STD_ELF = APP_NAME + '-' + APP_TYPE + '.elf'
 
 HOME_DIR = os.getcwd()
+
+# clean previous build
+os.system("rm ../bin -rf") 
 os.system('mkdir -p ../bin/mem')
 os.system('mkdir -p ../bin/flash')
 
@@ -72,6 +75,7 @@ elif APP_TYPE == 'mem':
     chg_ld_addr('0x30000000')
     os.chdir(HOME_DIR + '/jump')
     os.system('make ARCH=' + APP_ARCH)
+
 
 if APP_TYPE == 'flash':
     copy_oper(APP_TYPE)
