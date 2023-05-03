@@ -189,6 +189,25 @@ $ bash gen.sh
 ```
 
 ## Usage <a name = "usage"></a>
+### 预编译程序
+在 `prebuilt` 目录下有一些预编译的程序，可以直接使用。
+```shell
+└── bin
+    ├── flash # 直接在flash上运行的程序，其中可以对elf文件进行反汇编
+    │   ├── hello-flash-riscv32-mycpu.bin
+    │   ├── hello-flash-riscv32-mycpu.elf
+    │   ├── memtest-flash-riscv32-mycpu.bin
+    │   ├── memtest-flash-riscv32-mycpu.elf
+    │   ├── rtthread-i-flash-riscv32-mycpu.bin
+    │   └── rtthread-i-flash-riscv32-mycpu.elf
+    └── mem  # 通过loader加载并运行的程序，需要实现fence.i指令才能运行
+        ├── hello-mem-riscv32-mycpu.bin
+        ├── hello-mem-riscv32-mycpu.elf
+        ├── memtest-mem-riscv32-mycpu.bin
+        ├── memtest-mem-riscv32-mycpu.elf
+        ├── rtthread-i-mem-riscv32-mycpu.bin
+        └── rtthread-i-mem-riscv32-mycpu.elf
+```
 
 ### 自行添加测试程序
 * 正确设置`AM_HOME`环境变量。
