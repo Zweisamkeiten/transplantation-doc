@@ -1,6 +1,6 @@
 ---
 date created: 2023-03-31 19:15
-date updated: 2023-03-31 20:10
+date updated: 2023-05-03 16:56
 ---
 
 # RT-thread 移植
@@ -36,6 +36,8 @@ git submodule update --init rt-thread
 ```
 
 #### 1. 构建 `riscv-gnu-toolchain` 的裸机 `newlib` 交叉编译器
+
+> 如果不想从源码自行编译交叉编译器，可以下载预编译好的编译器 [mutilib](https://github.com/iEDA-Open-Source-Core-Project/riscv64-unknown-elf-mutilib), 并将其解压到 `$WORKDIR/output/riscv` 目录下。
 
 ##### 构建依赖
 
@@ -187,12 +189,32 @@ $ bash gen.sh
 ```
 
 ## Usage <a name = "usage"></a>
+### 预编译程序
+在 `prebuilt` 目录下有一些预编译的程序，可以直接使用。
+```shell
+└── bin
+    ├── flash # 直接在flash上运行的程序，其中可以对elf文件进行反汇编
+    │   ├── hello-flash-riscv32-mycpu.bin
+    │   ├── hello-flash-riscv32-mycpu.elf
+    │   ├── memtest-flash-riscv32-mycpu.bin
+    │   ├── memtest-flash-riscv32-mycpu.elf
+    │   ├── rtthread-i-flash-riscv32-mycpu.bin
+    │   └── rtthread-i-flash-riscv32-mycpu.elf
+    └── mem  # 通过loader加载并运行的程序，需要实现fence.i指令才能运行
+        ├── hello-mem-riscv32-mycpu.bin
+        ├── hello-mem-riscv32-mycpu.elf
+        ├── memtest-mem-riscv32-mycpu.bin
+        ├── memtest-mem-riscv32-mycpu.elf
+        ├── rtthread-i-mem-riscv32-mycpu.bin
+        └── rtthread-i-mem-riscv32-mycpu.elf
+```
 
 ### 自行添加测试程序
 * 正确设置`AM_HOME`环境变量。
 ```sh
 source init.sh
 ```
+可以通过 `env | grep AM_HOME` 查看是否正确设置了`AM_HOME`环境变量。
 * 将自己的测试程序源码目录放到`./prog/src`下，源码目录下需要有个Makefile，其内容格式可以参考`./prog/src/hello/Makefile`：
     ```Makefile
     SRCS = hello.c # 所有的源码路径
